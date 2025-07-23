@@ -1,4 +1,4 @@
-# shiny-FunBioDiv
+# shinyFunBioDiv
 
 Shiny app for exploring [FunBioDiv](https://www.fondationbiodiversite.fr/en/the-frb-in-action/programs-and-projects/le-cesab/funbiodiv/) datasets. You can run the shinyApp locally, or use it [online](https://rfrelat-cesab.shinyapps.io/shinyFunBioDiv/).
 
@@ -30,17 +30,21 @@ runShiny()
 
 
 
-## Update and export on shinyapps.io
+## Update metadata and export on shinyapps.io
 
-You will need to clone this repository in Github.
+To follow this procedure, you need to clone this repository in Github. Then follow the three steps below.
 
-#### 1. Update the metadata with  
+#### 1. Update the metadata
+
+Make sure to have the latest copy of the metadata in `data/FunBioDiv_MetaData_Data.xlsx`
+
 ```r
 devtools::load_all()
 source("analysis/01_prepare_data.R")
 ```
 
-#### 2. Test that the shiny app still works well
+#### 2. Test the shiny app
+
 ```r
 # run the Shiny app locally
 runShiny()
@@ -53,7 +57,7 @@ runShiny()
 rsconnect::deployApp(
     appDir = "app",
     appFiles = rsconnect::listDeploymentFiles("app"),
-    appName = "shiny-FunBioDiv",
+    appName = "shinyFunBioDiv",
     appTitle = "FunBioDiv data explorer"
 )
 ```

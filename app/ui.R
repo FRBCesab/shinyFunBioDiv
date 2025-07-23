@@ -29,7 +29,7 @@ shinyUI(fluidPage(
 
         mainPanel = mainPanel(
           leafletOutput("mapMeta"),
-          DTOutput('tableMeta'),
+          DT::DTOutput('tableMeta'),
         )
       ),
     ),

@@ -78,7 +78,7 @@ shinyServer(function(input, output, session) {
   })
 
   # DATASET : Main panel
-  output$tableMeta <- renderDT({
+  output$tableMeta <- DT::renderDT({
     DT::datatable(
       metaInput(),
       rownames = FALSE

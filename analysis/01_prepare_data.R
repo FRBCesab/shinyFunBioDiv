@@ -122,7 +122,7 @@ coo_4326 <- st_coordinates(shp_4326)
 gis[proj %in% "LAMB93", c("longitude", "latitude")] <- coo_4326
 
 # B3. visualization
-plot(gis$longitude, gis$latitude)
+# plot(gis$longitude, gis$latitude)
 # fullcoo <- complete.cases(gis[, c("longitude", "latitude")])
 # shp <- st_as_sf(gis[fullcoo, ], coords = c("longitude", "latitude"), crs = 4326)
 # mapview::mapview(shp)

@@ -41,7 +41,7 @@ The [**FunBioDiv** project](https://www.fondationbiodiversite.fr/en/the-frb-in-a
 The research project **FunBioDiv** was selected from the [2023 FRB-MTE-OFB "Antropogenic pressures and impacts on terrestrial biodiversity](https://www.fondationbiodiversite.fr/en/calls/appel-a-projets-frb-mte-ofb-2023-pressions-anthropiques-et-impacts-sur-la-biodiversite-terrestre/).  
 
 
-This is a beta version with non tested functionality and incomplete metadata. Source code is available on [Github](https://github.com/FRBCesab/shiny-FunBioDiv)
+This is a beta version with non tested functionality and incomplete metadata. Source code is available on [Github](https://github.com/FRBCesab/shinyFunBioDiv)
 
 <!-- badges: start -->
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
