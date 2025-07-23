@@ -1,0 +1,28 @@
+Package: shiny-FunBioDiv
+Type: Package
+Title: Shiny App for exploring FunBioDiv datasets
+Version: 0.0.1
+Authors@R: c(
+    person(given   = "Romain",
+           family  = "Frelat",
+           role    = c("aut"),
+           email   = "rom.frelat@gmail.com",
+           comment = c(ORCID = "0000-0002-8631-4398")))
+Description: Shiny App to explore the FunBioDiv datasets based on agricultural practices and response variables.
+URL: https://github.com/FELLOW-flora/slides-ws2
+BugReports: https://github.com/FRBCesab/shiny-FunBioDiv/issues
+License: GPLv3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1
+Imports: 
+    readxl,
+    utils
+Depends: 
+    DT,
+    htmltools,
+    leaflet,
+    mapview,
+    sf,
+    shiny,
+    shinythemes

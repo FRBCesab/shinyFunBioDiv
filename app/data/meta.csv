@@ -1,0 +1,12 @@
+"Study_ID","Years","Country","Type","Resp_variable","Ag_practices"
+"BIOMHE","2020","France","Single site factorial experiment","NE - carabids, NE - hoverflies, NE - spiders, Other, Pest - insect, Pest - weed","intercropping, natural_habitats"
+"DIVAG","2019","France","Single site factorial experiment","NE - hoverflies, Pest - weed","intercropping, natural_habitats"
+"MULTIFUNC","2012","Sweden","Field network","NE - spiders, Other, Pest - insect","natural_habitats"
+"OSCAR","2018, 2019, 2020, 2021, 2022, 2023, 2024","France","Field network","Pest - pathogen","crop_diversity"
+"SEBIOPAG _BVD_CM_pest","","France","Field network","Pest - insect",NA
+"SEBIOPAG _BVD_NE_carabids","","France","Field network","NE - carabids",NA
+"SEBIOPAG _BVD_NE_spiders","","France","Field network","NE - spiders",NA
+"SEBIOPAG _BVD_pathogen_pest","","France","Field network","Pest - pathogen",NA
+"SEBIOPAG _BVD_sentinel","","France","Field network","P. control - sentinel",NA
+"SEBIOPAG_BVD_aphid_pest","","France","Field network","Pest - insect",NA
+"SEBIOPAG_ZAAr","2014, 2015, 2016, 2018, 2021, 2023","France","Field network","NE - carabids, NE - spiders, P. control - sentinel, Pest - weed","natural_habitats"
