@@ -5,6 +5,7 @@ suppressPackageStartupMessages({
   require(DT)
   require(leaflet)
   require(htmltools)
+  require(markdown)
 })
 
 meta <- utils::read.csv("data/meta.csv")
