@@ -87,7 +87,9 @@ shinyServer(function(input, output, session) {
 
   output$mapMeta <- renderLeaflet({
     leaflet() |>
-      addTiles() |>
+      addTiles(
+        options = providerTileOptions(minZoom = 3, maxZoom = 10)
+      ) |>
       setView(
         mean(bounds[c(1, 3)]),
         mean(bounds[c(2, 4)]),
@@ -114,15 +116,17 @@ shinyServer(function(input, output, session) {
     )
 
     leafletProxy("mapMeta", data = in_shp) %>%
-      clearShapes() %>%
-      addPolygons(
+      clearMarkers() %>%
+      addCircleMarkers(
         data = in_shp,
         fillColor = ~ pal(Study_ID),
         fillOpacity = 0.8,
-        color = "#BDBDC3",
-        weight = 2,
+        color = ~ pal(Study_ID),
+        weight = 1,
         popup = shp_popup
       )
+
+    #clearShapes() %>%
     #}
   })
 })

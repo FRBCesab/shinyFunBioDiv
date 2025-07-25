@@ -29,6 +29,9 @@ shinyUI(fluidPage(
 
         mainPanel = mainPanel(
           leafletOutput("mapMeta"),
+          h5(
+            "Locations of fields are approximated to the nearest 0.1 degree and jittered to safeguard privacy."
+          ),
           DT::DTOutput('tableMeta'),
         )
       ),

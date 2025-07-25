@@ -1,6 +1,6 @@
-The aim of this dashboard is to explore the metadata of the FunBioDiv datasets. You can select the dataset based on **agricultural practices** and/or **response variables**.
+The aim of this dashboard is to explore the metadata of the FunBioDiv datasets. You can select the dataset based on **diversification measures**, **response variables**, and/or other **covariates**.
 
-### Agricultural practices
+#### Diversification measures
 
 Diversification measures used for the experimental design in primary studies, i.e. used as a structuring variable for the experimental design.
 
@@ -18,7 +18,7 @@ Diversification measures used for the experimental design in primary studies, i.
 
 
 
-### Response variables
+#### Response variables
 
 There are four types of response variables that could possibly be collected.
 
@@ -26,8 +26,18 @@ There are four types of response variables that could possibly be collected.
 | Name             | Description                                            |
 | ---------------- | ------------------------------------------------------ |
 | `Pest`             | Pest type (pest/weed/ pathogen abundance or frequency) |
-| `NE`               | Natural Enemies (community data on different groups)   |
 | `P. control`       | Pest control potential (predation rates by sentinel cards or exclusion cages) |
+| `Other`            | Other                                                  |
+
+
+#### Other covariates
+
+| Name             | Description                                            |
+| ---------------- | ------------------------------------------------------ |
+| `Crop.type`      | Crop type, either annual, perrenial, or mixed          |
+| `Organic`        | Organic farming. One of `yes`, `no`, or `mixed`        |
+| `Tillage`        | Soil treatment. One of `yes`, `no`, or `mixed`         |
+| `NE`             | Natural Enemies (community data on different groups)   |
 | `Other`            | Other                                                  |
 
 

@@ -121,44 +121,66 @@ shp_4326 <- st_transform(shp_5698, crs = 4326)
 coo_4326 <- st_coordinates(shp_4326)
 gis[proj %in% "LAMB93", c("longitude", "latitude")] <- coo_4326
 
-# B3. visualization
-# plot(gis$longitude, gis$latitude)
-# fullcoo <- complete.cases(gis[, c("longitude", "latitude")])
-# shp <- st_as_sf(gis[fullcoo, ], coords = c("longitude", "latitude"), crs = 4326)
-# mapview::mapview(shp)
 
+# B3. Alter coordinates to safeguard privacy
+# plot(gis$longitude, gis$latitude)
+fullcoo <- complete.cases(gis[, c("longitude", "latitude")])
+gis_points <- gis[fullcoo, c("Study_ID", "longitude", "latitude")]
+# remove duplicates (so that it doesn't appear twice when jittered)
+gis_points <- gis_points[!duplicated(gis_points), ]
+# round and jitter coordinates for privacy reason
+gis_points$lon <- jitter(round(gis_points$longitude, 1), amount = 0.05)
+gis_points$lat <- jitter(round(gis_points$latitude, 1), amount = 0.05)
+
+
+# B4. Create sf object
+mpt <- match(gis_points$Study_ID, smalldf$Study_ID)
+gis_points$Type <- smalldf$Type[mpt]
+gis_points$Resp.var <- smalldf$Resp_variable[mpt]
+gis_points$Practice <- smalldf$Ag_practices[mpt]
+
+shp <- st_as_sf(
+  gis_points[, c("Study_ID", "lon", "lat", "Type", "Resp.var", "Practice")],
+  coords = c("lon", "lat"),
+  crs = 4326
+)
+
+# check visualization
+# mapview::mapview(shp, zcol = "Study_ID")
+
+# B5. Export shapefile
+st_write(
+  shp,
+  dsn = here::here("app", "data", "points.shp"),
+  layer = "points.shp",
+  driver = "ESRI Shapefile",
+  append = FALSE
+)
+
+# no need to calculate convex hull anymore
 # B4. calculate convex hull
 # so far, simple with sf function, but could also use
 # grDevices::chull(gis$X, gis$Y)
 # alphahull::ahull(x, y = NULL, alpha)
-list_hull <- list()
-for (i in unique(gis$Study_ID)) {
-  coo <- gis[gis$Study_ID == i, c("longitude", "latitude")]
-  coo <- coo[complete.cases(coo), ]
-  if (nrow(coo) > 0) {
-    # if we need more precise concave hull
-    # hulli <- st_concave_hull(st_multipoint(as.matrix(coo), dim = "XY"), 0.3)
-    hulli <- st_convex_hull(st_multipoint(as.matrix(coo), dim = "XY"))
-    list_hull[[i]] <- hulli
-  }
-}
+# list_hull <- list()
+# for (i in unique(gis$Study_ID)) {
+#   coo <- gis[gis$Study_ID == i, c("longitude", "latitude")]
+#   coo <- coo[complete.cases(coo), ]
+#   if (nrow(coo) > 0) {
+#     # if we need more precise concave hull
+#     # hulli <- st_concave_hull(st_multipoint(as.matrix(coo), dim = "XY"), 0.3)
+#     hulli <- st_convex_hull(st_multipoint(as.matrix(coo), dim = "XY"))
+#     list_hull[[i]] <- hulli
+#   }
+# }
 
-# B.5 Combine polygon and metadata
-shp_poly <- st_sf(
-  smalldf[match(names(list_hull), smalldf$Study_ID), ],
-  geometry = st_sfc(list_hull),
-  crs = 4326
-)
+# # B.5 Combine polygon and metadata
+# shp_poly <- st_sf(
+#   smalldf[match(names(list_hull), smalldf$Study_ID), ],
+#   geometry = st_sfc(list_hull),
+#   crs = 4326
+# )
 
-names(shp_poly)[c(1, 5, 6)] <- c("Study.ID", "Resp.var", "Practice")
+# names(shp_poly)[c(1, 5, 6)] <- c("Study.ID", "Resp.var", "Practice")
 # plot(gis$longitude, gis$latitude)
 # plot(shp_poly, add = TRUE)
-
-# B6. Export shapefile
-st_write(
-  shp_poly,
-  dsn = here::here("app", "data", "poly.shp"),
-  layer = "poly.shp",
-  driver = "ESRI Shapefile",
-  append = FALSE
-)

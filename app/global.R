@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 })
 
 meta <- utils::read.csv("data/meta.csv")
-shp <- sf::st_read("data/poly.shp")
+shp <- sf::st_read("data/points.shp")
 bounds <- sf::st_bbox(shp)
 pal <- leaflet::colorFactor("viridis", domain = NULL)
 
