@@ -8,27 +8,24 @@
 # load the needed package and functions
 devtools::load_all()
 
+# make sure no one is logged in from Google Account
+googlesheets4::gs4_deauth()
+
 ## A. METADATA
 # A.1 Load metadata
-meta <- readxl::read_xlsx(
-  here::here("data", "FunBioDiv_MetaData_Data.xlsx"),
-  sheet = 1,
-  skip = 2
-)
-# might be good to automatized the loading in GoogleDrive
-# library(googledrive)
-# dl <- drive_download(
-# as_id("https://docs.google.com/spreadsheets/d/17ZhE3nxqtGYNzeADMzU02YzfKU9H9f5j/edit#gid=1748893795"),
-#  path = 'temp1.xlsx',
-#  overwrite = TRUE,
-#  type = "xlsx")
-# or https://googlesheets4.tidyverse.org/
+url0 <- "https://docs.google.com/spreadsheets/d/1Lz-IBQAPd8RykPj57Nf1Tutb_fQlXg4fG461i29BYIM/"
+meta <- googlesheets4::read_sheet(url0, sheet = 1, skip = 2, col_types = "c")
+# meta <- readxl::read_xlsx(
+#   here::here("data", "FunBioDiv_MetaData_Data.xlsx"),
+#   sheet = 1,
+#   skip = 2
+# )
 
 # dim(meta)
 # names(meta)
 
 # A.2 Select relevant variables
-keep <- c(1, 4, 5, 6, 10:17, 20)
+keep <- c(1, 4, 5, 6, 10:17, 19:24, 26:27)
 meta <- meta[, keep]
 lab <- c(
   "Type",
@@ -39,33 +36,58 @@ lab <- c(
   "agroforestry",
   "crop_rotation",
   "natural_habitats",
-  "crop_diversity"
+  "crop_diversity",
+  "organic",
+  "tillage",
+  "N_qty",
+  "TFI",
+  "Yield",
+  "crop_type"
 )
-names(meta)[4:12] <- lab
+names(meta)[4:18] <- lab
 
 
 # A.3 Simplify the metadata
+#table(meta$Study_ID)
+# clean SEBIOPAG_BVD
+meta$Study_ID <- gsub("SEBIOPAG _BVD", "SEBIOPAG_BVD", meta$Study_ID)
+
 # pre-processing for years
-all_years <- strsplit(meta$Year, ";")
-small_year <- data.frame(
-  "ID" = rep(meta$Study_ID, sapply(all_years, length)),
-  "yr" = as.numeric(unlist(all_years))
+meta$Year <- gsub(" à ", ";", meta$Year)
+meta$Year <- gsub(" ", "", meta$Year)
+allyears <- strsplit(meta$Year, ";")
+df_allyear <- data.frame(
+  "ID" = rep(meta$Study_ID, sapply(allyears, length)),
+  "yr" = as.numeric(unlist(allyears))
 )
 
-# replace 'Pest control' to avoid overlap with 'Pest'
-meta$Response_variables <- gsub(
-  "Pest control -",
-  "P. control -",
-  meta$Response_variables
+# select sampling 'Pest'
+meta$Pest <- ifelse(
+  grepl("Pest - ", meta$Response_variables),
+  gsub("Pest - ", "", meta$Response_variables),
+  ""
+)
+
+meta$NE <- ifelse(
+  grepl("NE - ", meta$Response_variables),
+  gsub("NE - ", "", meta$Response_variables),
+  ""
 )
 
 # simplify the dataset with one line per Study_ID
 smalldf <- data.frame(
   "Study_ID" = sort(unique(meta$Study_ID)),
-  "Years" = tapply(small_year$yr, small_year$ID, concat),
+  "Years" = tapply(df_allyear$yr, df_allyear$ID, minmax, na.rm = TRUE),
   "Country" = tapply(firstup(meta$Country), meta$Study_ID, concat),
   "Type" = tapply(firstup(meta$Type), meta$Study_ID, concat),
-  "Resp_variable" = tapply(meta$Response_variables, meta$Study_ID, concat)
+  "Resp_pest" = tapply(meta$Pest, meta$Study_ID, concat),
+  "Resp_NE" = tapply(meta$NE, meta$Study_ID, concat),
+  "Organic" = tapply(meta$organic, meta$Study_ID, concat),
+  "Tillage" = tapply(meta$tillage, meta$Study_ID, concat),
+  "N_qty" = tapply(meta$N_qty, meta$Study_ID, concat),
+  "TFI" = tapply(meta$TFI, meta$Study_ID, concat),
+  "Yield" = tapply(meta$Yield, meta$Study_ID, concat),
+  "Crop_type" = tapply(meta$crop_type, meta$Study_ID, concat)
 )
 
 # get the practices
@@ -78,10 +100,12 @@ smallag <- data.frame(
 )
 practices <- tapply(smallag$practices, smallag$ID, concat)
 
-smalldf$Ag_practices <- as.character(
+smalldf$Div_measures <- as.character(
   practices[match(smalldf$Study_ID, names(practices))]
 )
 
+# re-order columnss
+smalldf <- smalldf[, c(1:6, 13, 12, 7:11)]
 
 # A.4 Export the metadata
 write.csv(
@@ -94,19 +118,22 @@ write.csv(
 ## B. Spatial coordinates
 # B.1 Load GPS coordinates
 library(sf)
-gis <- readxl::read_xlsx(
-  here::here("data", "FunBioDiv_MetaData_Data.xlsx"),
-  sheet = 2,
-  skip = 2
-)
+gis <- googlesheets4::read_sheet(url0, sheet = 2, skip = 2, col_types = "c", )
+# gis <- readxl::read_xlsx(
+#   here::here("data", "FunBioDiv_MetaData_Data.xlsx"),
+#   sheet = 2,
+#   skip = 2
+# )
 
 # B.2 Clean the messy coordinates
-gis$X <- as.numeric(gis$X)
-gis$Y <- as.numeric(gis$Y)
+gis$X <- as.numeric(gsub(",", ".", gis$X))
+gis$Y <- as.numeric(gsub(",", ".", gis$Y))
 
 # invert latitude / longitude in OSCAR project
-gis$longitude <- ifelse(gis$Study_ID %in% "OSCAR", gis$Y, gis$X)
-gis$latitude <- ifelse(gis$Study_ID %in% "OSCAR", gis$X, gis$Y)
+# table(gis$longitude>40, gis$Study_ID)
+inv_coo <- c("SEBIOPAG_VcG", "OSCAR", "LepiBats", "MUESLI")
+gis$longitude <- ifelse(gis$Study_ID %in% inv_coo, unlist(gis$Y), unlist(gis$X))
+gis$latitude <- ifelse(gis$Study_ID %in% inv_coo, gis$X, gis$Y)
 
 # issue some are not in WGS84, let's try the most commun
 # epsg 4326 (WGS84),
@@ -136,11 +163,21 @@ gis_points$lat <- jitter(round(gis_points$latitude, 1), amount = 0.05)
 # B4. Create sf object
 mpt <- match(gis_points$Study_ID, smalldf$Study_ID)
 gis_points$Type <- smalldf$Type[mpt]
-gis_points$Resp.var <- smalldf$Resp_variable[mpt]
-gis_points$Practice <- smalldf$Ag_practices[mpt]
-
+gis_points$Resp.pest <- smalldf$Resp_pest[mpt]
+gis_points$Resp.NE <- smalldf$Resp_NE[mpt]
+gis_points$Diversif <- smalldf$Div_measures[mpt]
+gis_points$Crop_type = smalldf$Crop_type[mpt]
 shp <- st_as_sf(
-  gis_points[, c("Study_ID", "lon", "lat", "Type", "Resp.var", "Practice")],
+  gis_points[, c(
+    "Study_ID",
+    "lon",
+    "lat",
+    "Type",
+    "Resp.pest",
+    "Resp.NE",
+    "Diversif",
+    "Crop_type"
+  )],
   coords = c("lon", "lat"),
   crs = 4326
 )

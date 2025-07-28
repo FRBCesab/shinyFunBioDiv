@@ -1,16 +1,16 @@
-The aim of this dashboard is to explore the metadata of the FunBioDiv datasets. You can select the dataset based on **diversification measures**, **response variables**, and/or other **covariates**.
+The aim of this dashboard is to explore the metadata of FunBioDiv datasets. You can select the dataset based on **diversification measures**, measured **response variables** (either pest or natural enemies - NE), or other covariates.
 
 #### Diversification measures
 
 Diversification measures used for the experimental design in primary studies, i.e. used as a structuring variable for the experimental design.
 
 
-| Name             | Description                                            |
-| ---------------- | ------------------------------------------------------ |
+| Name               | Description                                            |
+| -------------------| ------------------------------------------------------ |
 | `service_plant`    | Service plant                                          |
 | `cultivar_mixture` | Cultivar mixture                                       |
 | `intercropping`    | Intercropping                                          |
-| `cover_crop`      | Cover crop                                             |
+| `cover_crop`       | Cover crop                                             |
 | `agroforestry`     | Agroforestry                                           |
 | `crop_rotation`    | Crop rotation at the field scale                       |
 | `natural_habitats` | Amount of semi-natural habitats at the landscape scale |
@@ -20,25 +20,22 @@ Diversification measures used for the experimental design in primary studies, i.
 
 #### Response variables
 
-There are four types of response variables that could possibly be collected.
+You can select datasets that measured the presence of Pest (`Resp_pest`) and/or of Natural Enemies (`Resp_NE`).
 
-
-| Name             | Description                                            |
-| ---------------- | ------------------------------------------------------ |
-| `Pest`             | Pest type (pest/weed/ pathogen abundance or frequency) |
-| `P. control`       | Pest control potential (predation rates by sentinel cards or exclusion cages) |
-| `Other`            | Other                                                  |
 
 
 #### Other covariates
 
+You can select other covariates from the study design characteristics.
+
 | Name             | Description                                            |
 | ---------------- | ------------------------------------------------------ |
-| `Crop.type`      | Crop type, either annual, perrenial, or mixed          |
-| `Organic`        | Organic farming. One of `yes`, `no`, or `mixed`        |
-| `Tillage`        | Soil treatment. One of `yes`, `no`, or `mixed`         |
-| `NE`             | Natural Enemies (community data on different groups)   |
-| `Other`            | Other                                                  |
+| `Crop.type`      | Crop type, either `annual`, `perennial`, or `both`     |
+| `Organic`        | Organic farming as structuring or measured variable.   |
+| `Tillage`        | Tillage as as structuring or measured variable         |
+| `N_qty`          | Nitrogen applied as structuring or measured variable   |
+| `TFI`            | Treatment frequency index as structuring or measured variable    |
+| `Yield`          | Yield as structuring or measured variable                        |
 
 
 

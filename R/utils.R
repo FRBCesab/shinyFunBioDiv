@@ -3,7 +3,27 @@
 #'
 #' @export
 concat <- function(x) {
+  #remove empty string
+  x <- x[x != ""]
   paste(sort(unique(x)), collapse = ", ")
+}
+
+
+# minmax ---------------------------------------
+#' concatenate minimum and maximum
+#'
+#' @export
+minmax <- function(x, na.rm = TRUE) {
+  if (all(!is.na(x)) | any(!is.na(x)) & na.rm) {
+    if (min(x, na.rm = na.rm) < max(x, na.rm = na.rm)) {
+      out <- paste(min(x, na.rm = na.rm), max(x, na.rm = na.rm), sep = " - ")
+    } else {
+      out <- min(x, na.rm = na.rm)
+    }
+  } else {
+    out <- NA
+  }
+  return(out)
 }
 
 # firstup ---------------------------------------

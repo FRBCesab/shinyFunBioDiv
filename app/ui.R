@@ -17,7 +17,7 @@ shinyUI(fluidPage(
           selectInput(
             "filter1",
             "Filter 1:",
-            choices = choices,
+            choices = names(choices),
             selected = "none"
           ),
           uiOutput('inSub1'),

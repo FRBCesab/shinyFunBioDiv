@@ -12,11 +12,14 @@ meta <- utils::read.csv("data/meta.csv")
 shp <- sf::st_read("data/points.shp")
 bounds <- sf::st_bbox(shp)
 pal <- leaflet::colorFactor("viridis", domain = NULL)
-
-choices <- c("none", "Ag_practices", "Resp_variable")
+keepPal <- pal(sort(unique(shp$Study_ID)))
+names(keepPal) <- sort(unique(shp$Study_ID))
+stablePal <- function(x) {
+  return(as.character(keepPal[x]))
+}
 
 # choices for ag_practices
-ag_choices <- c(
+div_choices <- c(
   "service_plant",
   "cultivar_mixture",
   "intercropping",
@@ -27,7 +30,36 @@ ag_choices <- c(
   "crop_diversity"
 )
 
+
 # choices for response variables
-resp_full <- sort(unique(unlist(strsplit(meta$Resp_variable, ", "))))
-resp_cat <- sapply(strsplit(resp_full, " -"), function(x) x[[1]])
-var_choices <- sort(unique(c(resp_full, resp_cat)))
+pest_choices <- sort(unique(unlist(strsplit(meta$Resp_pest, ", "))))
+NE_choices <- sort(unique(unlist(strsplit(meta$Resp_NE, ", "))))
+
+# choices for covariates
+# orga_choices <- sort(unique(meta$Organic))
+# orga_choices <- orga_choices[!orga_choices %in% c("", "unknown")]
+# till_choices <- sort(unique(meta$Tillage))
+# till_choices <- till_choices[!till_choices %in% c("", "unknown")]
+# nqty_choices <- sort(unique(meta$N_qty))
+# nqty_choices <- nqty_choices[!nqty_choices %in% c("", "unknown")]
+# tfi_choices <- sort(unique(meta$TFI))
+# yield_choices <- sort(unique(meta$Yield))
+covchoices <- c("measured", "structured")
+
+ctype_choices <- sort(unique(meta$Crop_type))
+
+
+# all choices
+
+choices <- list(
+  "none" = c(),
+  "Div_measures" = div_choices,
+  "Resp_pest" = pest_choices,
+  "Resp_NE" = NE_choices,
+  "Crop_type" = ctype_choices,
+  "Organic" = covchoices,
+  "Tillage" = covchoices,
+  "N_qty" = covchoices,
+  "TFI" = covchoices,
+  "Yield" = covchoices
+)
