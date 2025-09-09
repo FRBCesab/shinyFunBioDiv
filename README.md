@@ -36,8 +36,6 @@ To follow this procedure, you need to clone this repository in Github. Then foll
 
 #### 1. Update the metadata
 
-Make sure to have the latest copy of the metadata in `data/FunBioDiv_MetaData_Data.xlsx`
-
 ```r
 devtools::load_all()
 source("analysis/01_prepare_data.R")

@@ -48,13 +48,25 @@ names(meta)[4:18] <- lab
 
 
 # A.3 Simplify the metadata
-#table(meta$Study_ID)
+# table(meta$Study_ID)
 # clean SEBIOPAG_BVD
 meta$Study_ID <- gsub("SEBIOPAG _BVD", "SEBIOPAG_BVD", meta$Study_ID)
 
 # pre-processing for years
-meta$Year <- gsub(" à ", ";", meta$Year)
+meta$Year <- gsub(" à ", "-", meta$Year)
+meta$Year <- gsub(",", ";", meta$Year)
 meta$Year <- gsub(" ", "", meta$Year)
+
+# manage range year '-' (works only with the first '-')
+# rangeL <- grepl("-", meta$Year)
+# loc <- regexpr("-", meta$Year[rangeL])
+# start <- substr(meta$Year[rangeL], loc - 4, loc - 1)
+# end <- substr(meta$Year[rangeL], loc + 1, loc + 4)
+# fullrange <- apply(cbind(start, end), 1, function(x) {
+#   paste(x[1]:x[2], collapse = ";")
+# })
+# meta$Year[rangeL] <- fullrange
+
 allyears <- strsplit(meta$Year, ";")
 df_allyear <- data.frame(
   "ID" = rep(meta$Study_ID, sapply(allyears, length)),
@@ -124,6 +136,8 @@ gis <- googlesheets4::read_sheet(url0, sheet = 2, skip = 2, col_types = "c", )
 #   sheet = 2,
 #   skip = 2
 # )
+# clean SEBIOPAG_BVD
+gis$Study_ID <- gsub("SEBIOPAG _BVD", "SEBIOPAG_BVD", gis$Study_ID)
 
 # B.2 Clean the messy coordinates
 gis$X <- as.numeric(gsub(",", ".", gis$X))
@@ -131,7 +145,15 @@ gis$Y <- as.numeric(gsub(",", ".", gis$Y))
 
 # invert latitude / longitude in OSCAR project
 # table(gis$longitude>40, gis$Study_ID)
-inv_coo <- c("SEBIOPAG_VcG", "OSCAR", "LepiBats", "MUESLI")
+inv_coo <- c(
+  "SEBIOPAG_VcG",
+  "OSCAR",
+  "LepiBats",
+  "MUESLI",
+  "SEBIOPAG_Plaine de Dijon",
+  "SEBIOPAG_BVD",
+  "DURUM_MIX_GM"
+)
 gis$longitude <- ifelse(gis$Study_ID %in% inv_coo, unlist(gis$Y), unlist(gis$X))
 gis$latitude <- ifelse(gis$Study_ID %in% inv_coo, gis$X, gis$Y)
 
