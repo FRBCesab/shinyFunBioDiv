@@ -39,6 +39,7 @@ To follow this procedure, you need to clone this repository in Github. Then foll
 ```r
 devtools::load_all()
 source("analysis/01_prepare_data.R")
+source("analysis/02_contingency.R")
 ```
 
 #### 2. Test the shiny app

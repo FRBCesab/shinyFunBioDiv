@@ -1,0 +1,25 @@
+"Study_ID","Pestcat","N_fieldyears","Pest_abundance","service_plant","cultivar_mixture","intercropping","cover_crop","agroforestry","crop_rotation","natural_habitats","crop_diversity"
+"ABY_weed","1_weed",196,TRUE,0,0,1,1,0,1,1,1
+"BACCHUS","2_insect, pathogen",56,TRUE,0,0,0,0,0,0,1,0
+"Berry 2018","2_weed",20,TRUE,0,0,1,0,0,0,1,0
+"BIOMHE","2_insect, weed",40,TRUE,0,0,1,0,1,0,1,0
+"BISCO","2_weed",27,TRUE,0,0,0,0,0,0,1,1
+"CA-SYS","2_insect",72,TRUE,1,1,1,1,0,1,1,1
+"CA-SYS_weed","1_weed",294,TRUE,1,1,1,1,0,1,1,1
+"DIVAG","2_weed",40,TRUE,0,0,1,0,1,0,1,0
+"DURUM_MIX_GM","1_pathogen",2,TRUE,0,1,0,0,0,0,0,0
+"EXCLU","2_insect, pathogen",90,FALSE,0,0,0,0,0,0,1,0
+"FARMLAND","2_weed",1451,TRUE,0,0,0,0,0,0,1,1
+"FENAY","2_weed",720,TRUE,1,1,1,1,0,1,1,1
+"FRAMEwork_BVD","2_insect",18,FALSE,0,0,0,0,0,0,0,1
+"LepiBats","2_insect",36,TRUE,0,0,0,0,0,0,0,1
+"MUESLI","2_insect, weed",30,FALSE,0,0,0,0,0,0,1,1
+"MULTIFUNC","2_insect",18,TRUE,0,0,0,0,0,0,1,0
+"OSCAR","2_insect, pathogen",519,TRUE,0,0,0,0,0,0,0,1
+"PestiRed","3_insect, pathogen, weed",360,TRUE,1,1,1,1,0,0,0,0
+"PIC_weed","1_weed",170,TRUE,0,0,1,1,0,1,0,0
+"SEBIOPAG_BVD","2_insect, pathogen",61,TRUE,0,0,0,0,0,0,1,0
+"SEBIOPAG_Plaine de Dijon","2_weed",240,TRUE,0,0,1,0,0,0,1,0
+"SEBIOPAG_VcG_cartesPredation","2_insect, weed",187,TRUE,0,0,1,0,0,0,1,0
+"SEBIOPAG_ZAAr","2_insect, weed",120,TRUE,0,0,0,0,0,0,1,0
+"SERIPAGE","2_weed",9,TRUE,0,0,0,0,0,0,1,1

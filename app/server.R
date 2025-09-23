@@ -153,4 +153,32 @@ shinyServer(function(input, output, session) {
     #clearShapes() %>%
     #}
   })
+
+  # Contingency table
+  output$contable <- renderPlotly({
+    if (input$selab) {
+      df <- ctab[ctab$Pest_abundance, ]
+    } else {
+      df <- ctab
+    }
+    if (input$unit == "Database") {
+      ct <- rowsum(df[, 5:12], group = df$Pestcat, na.rm = TRUE)
+    } else {
+      ct <- rowsum(
+        df[, 5:12] * df$N_fieldyears,
+        group = df$Pestcat,
+        na.rm = TRUE
+      )
+    }
+    # make sure 0 is transparent
+    ct[ct == 0] <- NA
+    # plotly
+    plot_ly(
+      x = colnames(ct),
+      y = rownames(ct),
+      z = as.matrix(ct),
+      type = "heatmap"
+    ) %>%
+      layout(margin = list(l = 120))
+  })
 })

@@ -37,6 +37,28 @@ shinyUI(fluidPage(
       ),
     ),
     tabPanel(
+      title = "Contingency",
+
+      sidebarLayout(
+        sidebarPanel = sidebarPanel(
+          selectInput(
+            "unit",
+            "Unit",
+            choices = c("Database", "FieldYears"),
+            selected = "FieldYears"
+          ),
+          checkboxInput(
+            "selab",
+            "Only Pest abundance/freq/obs",
+            value = FALSE,
+          )
+        ),
+        mainPanel = mainPanel(
+          plotlyOutput("contable")
+        )
+      ),
+    ),
+    tabPanel(
       title = "About",
       htmltools::includeMarkdown("about.md"),
     ),

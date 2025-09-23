@@ -25,10 +25,13 @@ meta <- googlesheets4::read_sheet(url0, sheet = 1, skip = 2, col_types = "c")
 # names(meta)
 
 # A.2 Select relevant variables
-keep <- c(1, 4, 5, 6, 10:17, 19:24, 26:27)
-meta <- meta[, keep]
+keep <- c(1, 4, 5, 6, 9, 11:18, 20:25, 27:30)
+meta <- fullmeta[, keep]
+
+# names(meta)
 lab <- c(
   "Type",
+  "N_fieldyears",
   "service_plant",
   "cultivar_mixture",
   "intercropping",
@@ -42,9 +45,10 @@ lab <- c(
   "N_qty",
   "TFI",
   "Yield",
-  "crop_type"
+  "crop_type",
+  "N_species"
 )
-names(meta)[4:18] <- lab
+names(meta)[c(4:19, 23)] <- lab
 
 
 # A.3 Simplify the metadata
@@ -55,17 +59,9 @@ meta$Study_ID <- gsub("SEBIOPAG _BVD", "SEBIOPAG_BVD", meta$Study_ID)
 # pre-processing for years
 meta$Year <- gsub(" à ", "-", meta$Year)
 meta$Year <- gsub(",", ";", meta$Year)
+meta$Year <- gsub("-", ";", meta$Year)
 meta$Year <- gsub(" ", "", meta$Year)
 
-# manage range year '-' (works only with the first '-')
-# rangeL <- grepl("-", meta$Year)
-# loc <- regexpr("-", meta$Year[rangeL])
-# start <- substr(meta$Year[rangeL], loc - 4, loc - 1)
-# end <- substr(meta$Year[rangeL], loc + 1, loc + 4)
-# fullrange <- apply(cbind(start, end), 1, function(x) {
-#   paste(x[1]:x[2], collapse = ";")
-# })
-# meta$Year[rangeL] <- fullrange
 
 allyears <- strsplit(meta$Year, ";")
 df_allyear <- data.frame(
@@ -74,11 +70,14 @@ df_allyear <- data.frame(
 )
 
 # select sampling 'Pest'
+meta$Response_variables <- gsub("^Pest-", "Pest - ", meta$Response_variables)
+
 meta$Pest <- ifelse(
   grepl("Pest - ", meta$Response_variables),
   gsub("Pest - ", "", meta$Response_variables),
   ""
-)
+) |>
+  tolower()
 
 meta$NE <- ifelse(
   grepl("NE - ", meta$Response_variables),
@@ -92,6 +91,7 @@ smalldf <- data.frame(
   "Years" = tapply(df_allyear$yr, df_allyear$ID, minmax, na.rm = TRUE),
   "Country" = tapply(firstup(meta$Country), meta$Study_ID, concat),
   "Type" = tapply(firstup(meta$Type), meta$Study_ID, concat),
+  "N_fieldyears" = tapply(meta$N_fieldyears, meta$Study_ID, max),
   "Resp_pest" = tapply(meta$Pest, meta$Study_ID, concat),
   "Resp_NE" = tapply(meta$NE, meta$Study_ID, concat),
   "Organic" = tapply(meta$organic, meta$Study_ID, concat),
@@ -103,8 +103,10 @@ smalldf <- data.frame(
 )
 
 # get the practices
-df_practices <- meta[5:12]
+df_practices <- meta[6:13]
 df_practices[is.na(df_practices)] <- "no"
+df_practices[df_practices == "maybe"] <- "yes"
+df_practices[df_practices == "yes (few)"] <- "yes"
 ind <- which(df_practices == "yes", arr.ind = TRUE)
 smallag <- data.frame(
   "ID" = meta$Study_ID[ind[, 1]],
@@ -116,8 +118,9 @@ smalldf$Div_measures <- as.character(
   practices[match(smalldf$Study_ID, names(practices))]
 )
 
-# re-order columnss
-smalldf <- smalldf[, c(1:6, 13, 12, 7:11)]
+# re-order columns
+# names(smalldf)
+smalldf <- smalldf[, c(1:7, 14, 13, 8:12)]
 
 # A.4 Export the metadata
 write.csv(
@@ -152,7 +155,9 @@ inv_coo <- c(
   "MUESLI",
   "SEBIOPAG_Plaine de Dijon",
   "SEBIOPAG_BVD",
-  "DURUM_MIX_GM"
+  "DURUM_MIX_GM",
+  "FRAMEwork_BVD",
+  "PestiRed"
 )
 gis$longitude <- ifelse(gis$Study_ID %in% inv_coo, unlist(gis$Y), unlist(gis$X))
 gis$latitude <- ifelse(gis$Study_ID %in% inv_coo, gis$X, gis$Y)

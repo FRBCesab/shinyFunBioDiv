@@ -3,6 +3,7 @@ suppressPackageStartupMessages({
   require(shinythemes)
   require(sf)
   require(DT)
+  require(plotly)
   require(leaflet)
   require(htmltools)
   require(markdown)
@@ -62,4 +63,21 @@ choices <- list(
   "N_qty" = covchoices,
   "TFI" = covchoices,
   "Yield" = covchoices
+)
+
+ctab <- utils::read.csv("data/cont_table.csv")
+ctab$Pestcat <- factor(
+  ctab$Pestcat,
+  levels = c(
+    "1_insect",
+    "1_pathogen",
+    "1_weed",
+    "2_insect",
+    "2_pathogen",
+    "2_weed",
+    "2_insect, pathogen",
+    "2_insect, weed",
+    "2_pathogen, weed",
+    "3_insect, pathogen, weed"
+  )
 )
